@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище GladkiyModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Executor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Грейд" Type="int" Nullable="false" />
+          <Property Name="Логин" Type="nvarchar" MaxLength="50" />
+          <Property Name="ФИО" Type="nvarchar" MaxLength="255" />
+          <Property Name="Пароль" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Логин" Type="varchar" MaxLength="50" />
+          <Property Name="ФИО" Type="varchar" MaxLength="50" />
+          <Property Name="Пароль" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Salary">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Менеджер" Type="int" Nullable="false" />
+          <Property Name="Junior (мин#ЗП)" Type="money" Nullable="false" />
+          <Property Name="Middle (мин#ЗП)" Type="money" Nullable="false" />
+          <Property Name="Senior (мин#ЗП)" Type="money" Nullable="false" />
+          <Property Name="Коэффициент для Анализ и проектирование" Type="float" Nullable="false" />
+          <Property Name="Коэффициент для Установка оборудования" Type="float" Nullable="false" />
+          <Property Name="Коэффициент для Техническое обслуживание и сопровождение" Type="float" Nullable="false" />
+          <Property Name="Коэффициент сложности" Type="int" Nullable="false" />
+          <Property Name="Коэффициент Времени" Type="int" Nullable="false" />
+          <Property Name="Коэффициент Денег" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Исполнитель" Type="int" />
+          <Property Name="Заголовок" Type="nvarchar" MaxLength="255" />
+          <Property Name="Сложность" Type="float" />
+          <Property Name="Статус" Type="int" />
+          <Property Name="Характер работы" Type="int" />
+        </EntityType>
+        <EntityType Name="WorkType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Название" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_Executor_Grade">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="Executor" Type="Self.Executor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Executor">
+              <PropertyRef Name="Грейд" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Salary_Manager">
+          <End Role="Manager" Type="Self.Manager" Multiplicity="1" />
+          <End Role="Salary" Type="Self.Salary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Manager">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Salary">
+              <PropertyRef Name="Менеджер" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_Executor">
+          <End Role="Executor" Type="Self.Executor" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Executor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Исполнитель" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Статус" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_WorkType">
+          <End Role="WorkType" Type="Self.WorkType" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Характер работы" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище GladkiyModelContainer">
+          <EntitySet Name="Executor" EntityType="Self.Executor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grade" EntityType="Self.Grade" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Manager" EntityType="Self.Manager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Salary" EntityType="Self.Salary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkType" EntityType="Self.WorkType" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Executor_Grade" Association="Self.FK_Executor_Grade">
+            <End Role="Grade" EntitySet="Grade" />
+            <End Role="Executor" EntitySet="Executor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Salary_Manager" Association="Self.FK_Salary_Manager">
+            <End Role="Manager" EntitySet="Manager" />
+            <End Role="Salary" EntitySet="Salary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_Executor" Association="Self.FK_Task_Executor">
+            <End Role="Executor" EntitySet="Executor" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_Status" Association="Self.FK_Task_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_WorkType" Association="Self.FK_Task_WorkType">
+            <End Role="WorkType" EntitySet="WorkType" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GladkiyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Executor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Грейд" Type="Int32" Nullable="false" />
+          <Property Name="Логин" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ФИО" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Пароль" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Grade" Relationship="Self.FK_Executor_Grade" FromRole="Executor" ToRole="Grade" />
+          <NavigationProperty Name="Task" Relationship="Self.FK_Task_Executor" FromRole="Executor" ToRole="Task" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Название" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Executor" Relationship="Self.FK_Executor_Grade" FromRole="Grade" ToRole="Executor" />
+        </EntityType>
+        <EntityType Name="Manager">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Логин" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ФИО" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Пароль" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Salary" Relationship="Self.FK_Salary_Manager" FromRole="Manager" ToRole="Salary" />
+        </EntityType>
+        <EntityType Name="Salary">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Менеджер" Type="Int32" Nullable="false" />
+          <Property Name="Junior__мин_ЗП_" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Middle__мин_ЗП_" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Senior__мин_ЗП_" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Коэффициент_для_Анализ_и_проектирование" Type="Double" Nullable="false" />
+          <Property Name="Коэффициент_для_Установка_оборудования" Type="Double" Nullable="false" />
+          <Property Name="Коэффициент_для_Техническое_обслуживание_и_сопровождение" Type="Double" Nullable="false" />
+          <Property Name="Коэффициент_сложности" Type="Int32" Nullable="false" />
+          <Property Name="Коэффициент_Времени" Type="Int32" Nullable="false" />
+          <Property Name="Коэффициент_Денег" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Manager" Relationship="Self.FK_Salary_Manager" FromRole="Salary" ToRole="Manager" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Название" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Task" Relationship="Self.FK_Task_Status" FromRole="Status" ToRole="Task" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Исполнитель" Type="Int32" />
+          <Property Name="Заголовок" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Сложность" Type="Double" />
+          <Property Name="Статус" Type="Int32" />
+          <Property Name="Характер_работы" Type="Int32" />
+          <NavigationProperty Name="Executor" Relationship="Self.FK_Task_Executor" FromRole="Task" ToRole="Executor" />
+          <NavigationProperty Name="Status" Relationship="Self.FK_Task_Status" FromRole="Task" ToRole="Status" />
+          <NavigationProperty Name="WorkType" Relationship="Self.FK_Task_WorkType" FromRole="Task" ToRole="WorkType" />
+        </EntityType>
+        <EntityType Name="WorkType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Название" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Task" Relationship="Self.FK_Task_WorkType" FromRole="WorkType" ToRole="Task" />
+        </EntityType>
+        <Association Name="FK_Executor_Grade">
+          <End Role="Grade" Type="Self.Grade" Multiplicity="1" />
+          <End Role="Executor" Type="Self.Executor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Executor">
+              <PropertyRef Name="Грейд" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_Executor">
+          <End Role="Executor" Type="Self.Executor" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Executor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Исполнитель" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Salary_Manager">
+          <End Role="Manager" Type="Self.Manager" Multiplicity="1" />
+          <End Role="Salary" Type="Self.Salary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Manager">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Salary">
+              <PropertyRef Name="Менеджер" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Статус" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_WorkType">
+          <End Role="WorkType" Type="Self.WorkType" Multiplicity="0..1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Характер_работы" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GladkiyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Executor" EntityType="Self.Executor" />
+          <EntitySet Name="Grade" EntityType="Self.Grade" />
+          <EntitySet Name="Manager" EntityType="Self.Manager" />
+          <EntitySet Name="Salary" EntityType="Self.Salary" />
+          <EntitySet Name="Status" EntityType="Self.Status" />
+          <EntitySet Name="Task" EntityType="Self.Task" />
+          <EntitySet Name="WorkType" EntityType="Self.WorkType" />
+          <AssociationSet Name="FK_Executor_Grade" Association="Self.FK_Executor_Grade">
+            <End Role="Grade" EntitySet="Grade" />
+            <End Role="Executor" EntitySet="Executor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_Executor" Association="Self.FK_Task_Executor">
+            <End Role="Executor" EntitySet="Executor" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Salary_Manager" Association="Self.FK_Salary_Manager">
+            <End Role="Manager" EntitySet="Manager" />
+            <End Role="Salary" EntitySet="Salary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_Status" Association="Self.FK_Task_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_WorkType" Association="Self.FK_Task_WorkType">
+            <End Role="WorkType" EntitySet="WorkType" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище GladkiyModelContainer" CdmEntityContainer="GladkiyEntities">
+          <EntitySetMapping Name="Executor">
+            <EntityTypeMapping TypeName="GladkiyModel.Executor">
+              <MappingFragment StoreEntitySet="Executor">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Грейд" ColumnName="Грейд" />
+                <ScalarProperty Name="Логин" ColumnName="Логин" />
+                <ScalarProperty Name="ФИО" ColumnName="ФИО" />
+                <ScalarProperty Name="Пароль" ColumnName="Пароль" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Grade">
+            <EntityTypeMapping TypeName="GladkiyModel.Grade">
+              <MappingFragment StoreEntitySet="Grade">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Manager">
+            <EntityTypeMapping TypeName="GladkiyModel.Manager">
+              <MappingFragment StoreEntitySet="Manager">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Логин" ColumnName="Логин" />
+                <ScalarProperty Name="ФИО" ColumnName="ФИО" />
+                <ScalarProperty Name="Пароль" ColumnName="Пароль" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Salary">
+            <EntityTypeMapping TypeName="GladkiyModel.Salary">
+              <MappingFragment StoreEntitySet="Salary">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Менеджер" ColumnName="Менеджер" />
+                <ScalarProperty Name="Junior__мин_ЗП_" ColumnName="Junior (мин#ЗП)" />
+                <ScalarProperty Name="Middle__мин_ЗП_" ColumnName="Middle (мин#ЗП)" />
+                <ScalarProperty Name="Senior__мин_ЗП_" ColumnName="Senior (мин#ЗП)" />
+                <ScalarProperty Name="Коэффициент_для_Анализ_и_проектирование" ColumnName="Коэффициент для Анализ и проектирование" />
+                <ScalarProperty Name="Коэффициент_для_Установка_оборудования" ColumnName="Коэффициент для Установка оборудования" />
+                <ScalarProperty Name="Коэффициент_для_Техническое_обслуживание_и_сопровождение" ColumnName="Коэффициент для Техническое обслуживание и сопровождение" />
+                <ScalarProperty Name="Коэффициент_сложности" ColumnName="Коэффициент сложности" />
+                <ScalarProperty Name="Коэффициент_Времени" ColumnName="Коэффициент Времени" />
+                <ScalarProperty Name="Коэффициент_Денег" ColumnName="Коэффициент Денег" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="GladkiyModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Task">
+            <EntityTypeMapping TypeName="GladkiyModel.Task">
+              <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Исполнитель" ColumnName="Исполнитель" />
+                <ScalarProperty Name="Заголовок" ColumnName="Заголовок" />
+                <ScalarProperty Name="Сложность" ColumnName="Сложность" />
+                <ScalarProperty Name="Статус" ColumnName="Статус" />
+                <ScalarProperty Name="Характер_работы" ColumnName="Характер работы" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkType">
+            <EntityTypeMapping TypeName="GladkiyModel.WorkType">
+              <MappingFragment StoreEntitySet="WorkType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
